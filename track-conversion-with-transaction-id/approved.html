@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Conversion with ID - Approved</title>
+    <script src="https://cdn.fstrk.net/lib/index.js"></script>
+  </head>
+  <body>
+    <h1>Track Conversion with ID - Approved Status</h1>
+    <div id="response"></div>
+    <script>
+      const transactionId = "01KEYA84ZBRDZSACPR10Y4DGC6_47mLLPHXgtF6kGGnHRKfj_Mb6gRguEtRGeq6ki23DfUkcMch"; // This is retrieved from other sources.
+      ASP.trackConversion({
+        integrationID: 'k5w9md8rcx',
+        transaction_id: transactionId
+      }).then(function(response) {
+        if (response.status !== 200) {
+          document.getElementById('response').innerHTML = '<p>Unsuccessful</p>';
+          return;
+        }
+        if (response.data.status === "processing") {
+          document.getElementById('response').innerHTML = '<p>Conversion was accepted by the system and is queued for processing. Transaction ID: ' + response.data.transaction_id + '</p>';
+        }
+      }).catch(function(error) {
+        console.log("An error was encountered:", error)
+      });
+    </script>
+  </body>
+</html>

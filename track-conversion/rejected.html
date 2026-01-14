@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Conversion - Rejected</title>
+    <script src="https://cdn.fstrk.net/lib/index.js"></script>
+  </head>
+  <body>
+    <h1>Track Conversion - Rejected Status</h1>
+    <div id="response"></div>
+    <script>
+      ASP.trackConversion({
+        integrationID: 'k5w9md8rcx',
+        offer: 'offerConversion',
+        publisher: 'publisherConversion',
+        revenue: '10',
+        payout: '5'
+      }).then(function(response) {
+        if (response.status !== 200) {
+          document.getElementById('response').innerHTML = '<p>Unsuccessful</p>';
+          return;
+        }
+        if (response.data.status === "rejected") {
+          document.getElementById('response').innerHTML = '<p>Conversion was rejected. Reason: ' + response.data.reason + '</p>';
+        }
+      }).catch(function(error) {
+        console.log("An error was encountered:", error)
+      });
+    </script>
+  </body>
+</html>

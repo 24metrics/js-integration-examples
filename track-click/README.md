@@ -1,9 +1,15 @@
-# Track Click Example
+# Track Click Examples
 
-This example demonstrates how to use the `ASP.trackClick` function to track clicks.
+These examples demonstrate how to handle different responses from the `ASP.trackClick` function. The scripts now include a check to ensure the HTTP response status is `200` and a `.catch()` block to log any errors that occur during the request.
 
-When the page loads, the `ASP.trackClick` function is called with the required parameters. The response from the server is logged to the console.
+## Approved Status
 
-## Expectation
+The `approved.html` example shows how to handle an "approved" status. When the `trackClick` function returns a response with a status of "approved", a message is inserted into the HTML to indicate that the click was successful, along with the transaction ID.
 
-When you open the `index.html` file in your browser, you should see the server response for the `trackClick` call in the developer console.
+## Rejected Status
+
+The `rejected.html` example shows how to handle a "rejected" status. When the `trackClick` function returns a response with a status of "rejected", a message is inserted into the HTML to indicate that the click was rejected, along with the reason.
+
+## Get Fields
+
+The `get-fields.html` example demonstrates how to use the `fields` parameter to request additional data in the response from the `trackClick` function. In this case, it requests the `fingerprint` and then displays the transaction ID, fingerprint, reason, and status in the HTML.

@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Click - Get Fields</title>
+    <script src="https://cdn.fstrk.net/lib/index.js"></script>
+  </head>
+  <body>
+    <h1>Get Fields with TrackClick</h1>
+    <div id="response"></div>
+    <script>
+      ASP.trackClick({
+        integrationID: 'k5w9md8rcx',
+        offer: 'offerClick',
+        publisher: 'publisherClick',
+        fields: 'fingerprint'
+      }).then(function(response) {
+        if (response.status !== 200) {
+          document.getElementById('response').innerHTML = '<p>Unsuccessful</p>';
+          return;
+        }
+        document.getElementById('response').innerHTML = '<p>Transaction ID: ' + response.data.transaction_id + '</p>';
+        document.getElementById('response').innerHTML += '<p>Fingerprint: ' + response.data.fingerprint + '</p>';
+        document.getElementById('response').innerHTML += '<p>Reason: ' + response.data.reason + '</p>';
+        document.getElementById('response').innerHTML += '<p>Status: ' + response.data.status + '</p>';
+      }).catch(function(error) {
+        console.log("An error was encountered:", error)
+      });
+    </script>
+  </body>
+</html>
