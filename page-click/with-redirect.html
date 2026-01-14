@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Page Click</h1>
+    <div id="response"></div>
+    <h2>Integration Settings</h2>
+    <p>On Click approval, the page will redirect to google.com since Approved Clicks Redirect URL is specified.</p>
+    <img src="./integration-settings.png" />
+  </body>
+  <script>
+    (function() {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.fstrk.net/lib/index.js';
+      script.async = true;
+      script.onload = function() {
+        ASP.pageClick({
+          integrationID: 'k5w9md8rcx'
+        });
+      };
+      document.head.appendChild(script);
+    })();
+  </script>
+</html>
