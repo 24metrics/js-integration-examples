@@ -35,7 +35,7 @@ To install the Javascript SDK, you need to include the following script tag in t
 
 ### Creating Clicks
 
-**Basic Function `ASP.pageClick({}`**- This is the one seen in the Integration Settings UI. This is used for general purposes. Use this function to automatically handle the redirection of *Approved Clicks Redirect URL* if approved or the *Redirect to Fallback URL* of the *Blocking Strategy for Fraud Clicks* if rejected.  See [React Example Webapp](./react-example/README.md).
+**Basic Function `ASP.pageClick({}`**- This is the one seen in the Integration Settings UI. This is used for general purposes. Use this function to automatically handle the redirection of *Approved Clicks Redirect URL* if approved or the *Redirect to Fallback URL* of the *Blocking Strategy for Fraud Clicks* if rejected.  See [React Example Webapp](./react-example).
 
 
 **Advanced Function `ASP.trackClick({})`** - Use this function to create a Click that may require more complex handling by using the response to handle approved/rejected event.
