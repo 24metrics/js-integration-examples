@@ -1,0 +1,73 @@
+.crypto-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.crypto-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.crypto-symbol {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.card-header h3 {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.card-body {
+  margin-bottom: 20px;
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.change {
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.change.positive {
+  color: #10b981;
+  background: #d1fae5;
+}
+
+.change.negative {
+  color: #ef4444;
+  background: #fee2e2;
+}
+
+.card-footer {
+  padding-top: 15px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.market-cap {
+  color: #6b7280;
+  font-size: 0.9rem;
+}

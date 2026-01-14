@@ -1,4 +1,4 @@
-## Javascript SDK
+# 24metrics JavaScript SDK
 
 
 <!-- vim-markdown-toc GFM -->
@@ -6,20 +6,24 @@
 * [Introduction](#introduction)
 * [Installation](#installation)
 * [General Usage](#general-usage)
-* [Detecting Fraud in the Response](#detecting-fraud-in-the-response)
-* [Example Response Handling](#example-response-handling)
-* [Track Clicks](#track-clicks)
-* [Track Impressions](#track-impressions)
-* [Track Conversions](#track-conversions)
-* [Track Conversions using Transaction ID](#track-conversions-using-transaction-id)
+  * [Creating Clicks](#creating-clicks)
+  * [Creating Impressions](#creating-impressions)
+  * [Creating Conversions](#creating-conversions)
+  * [Creating Conversions using Transaction ID from Cookie](#creating-conversions-using-transaction-id-from-cookie)
+* [Examples](#examples)
+  * [Detecting Fraud in the Response](#detecting-fraud-in-the-response)
+  * [Creating Clicks](#creating-clicks-1)
+  * [Creating Impressions](#creating-impressions-1)
+  * [Creating Conversions](#creating-conversions-1)
+  * [Block Rejected User when Rejected](#block-rejected-user-when-rejected)
 
 <!-- vim-markdown-toc -->
 
-### Introduction
+## Introduction
 
 The Javascript SDK is a library that allows you to track impressions, clicks and conversions from your website and send them to our system. This SDK is designed to be used in conjunction with our system to track the performance of your ads and campaigns.
 
-### Installation
+## Installation
 
 To install the Javascript SDK, you need to include the following script tag in the `<head>` section of your website:
 
@@ -27,15 +31,44 @@ To install the Javascript SDK, you need to include the following script tag in t
 <script src="https://cdn.fstrk.net/lib/index.js"></script>
 ```
 
-### General Usage
+## General Usage
 
-The SDK provides three main functions:
+### Creating Clicks
+
+**Basic Function `ASP.pageClick({}`**- This is the one seen in the Integration Settings UI. This is used for general purposes. Use this function to automatically handle the redirection of *Approved Clicks Redirect URL* if approved or the *Redirect to Fallback URL* of the *Blocking Strategy for Fraud Clicks* if rejected.  See [React Example Webapp](./react-example/README.md).
+
+
+**Advanced Function `ASP.trackClick({})`** - Use this function to create a Click that may require more complex handling by using the response to handle approved/rejected event.
+
+**Reading the Advanced Function Response**
+
+- If the response has a `redirect_url` field with value, you can use that to manually redirect the user.
+- If the click is approved or monitoring mode is on in the Filter Group that is used, the value of the `redirect_url` will be the *Approved Clicks Redirect URL* if defined. If the click is rejected and monitoring mode is off, the value of the `redirect_url` will be the *Redirect to Fallback URL* if chosen as the *Block Strategy for Fraud Clicks*.
+- If the click is rejected and monitoring mode is off and the *Blocking Strategy for Fraud Clicks* is Show Blank Page, the user will see a Blank page.
+
+### Creating Impressions
+
+`ASP.trackImpression({})` - Use this function to create an Impression and use the response to handle approved/rejected event.
+
+### Creating Conversions
+
+`ASP.trackConversion({})` - Use this function to create an Conversion and use the response to handle approved/rejected event.
+
+### Creating Conversions using Transaction ID from Cookie
+
+Tracking conversions using `transaction_id` is recommended for tracking conversions if you are using our system Click API.
+To track conversions with the transaction ID from the click API response, you need to call the `ASP.trackConversion` function with the following parameters:
+If the `transaction_id` parameter is not provided, the SDK will try to look for the transaction ID from the domain cookies.
 
 ```javascript
-ASP.trackClick({}) // Track Clicks
-ASP.trackImpression({}) // Track Impressions
-ASP.trackConversion({}) // Track Conversions
+ASP.trackConversion({
+  integrationID: '{integrationID}',
+  transaction_id: '{transactionID}', // Optional
+}).then(function(response) {
+  console.log(response); // {"status": 200, "data": {"status": "processing"}}
+})
 ```
+## Examples
 
 You must pass these required parameters to each function:
 
@@ -90,42 +123,7 @@ ASP.trackClick({
 });
 ```
 
-### Example Response Handling
-
-This example code will do the following:
-- If the response code is 200 and the status is not approved. The user will see a page with "Invalid Click" in it.
-- If the response code is other than 200, the page will load normally.
-- If the SDK fails to execute for some reason such as: server unavailable, client network issue, or invalid usage of the SDK or API, the page will load normally.
-
-```javascript
-ASP.trackClick({
-    integrationID: 'ip54qsskbm',
-    advertiser: 'Ciprian',
-    offer: 'Test_with_fraudfilters',
-    publisher: 'Live_page_test',
-    sub_id: 'Example',
-    sub_id_2: 'Test',
-    sub_id_3: 'Test',
-    sub_id_4: 'Test',
-    sub_id_5: 'Test',
-    sub_id_6: 'Test',
-    referer: 'Test',
-    external_transaction_id: 'Test',
-}).then(function(response) {
-    console.log(response);
-    // Check if response was successful (status 200) but not approved
-    if (response.status === 200 && response.data.status !== "approved") {
-        // Clear the page content
-        document.body.innerHTML = '<p>Invalid click</p>';
-    }
-}).catch(function(error) {
-    // If there's an error, we don't do anything as per requirements
-    console.error("Error in trackClick:", error);
-    // Page loads normally if there's an error
-});
-```
-
-### Track Clicks
+### Creating Clicks
 
 To track clicks, you need to call the `ASP.trackClick` function with the following parameters:
 
@@ -139,7 +137,7 @@ ASP.trackClick({
 });
 ```
 
-### Track Impressions
+### Creating Impressions
 
 To track impressions, you need to call the `ASP.trackImpression` function with the following parameters:
 
@@ -153,7 +151,7 @@ ASP.trackImpression({
 });
 ```
 
-### Track Conversions
+### Creating Conversions
 
 To track conversions, you need to call the `ASP.trackConversion` function with the following parameters:
 
@@ -169,17 +167,31 @@ ASP.trackConversion({
 })
 ```
 
-### Track Conversions using Transaction ID
 
-Tracking conversions using `transaction_id` is recommended for tracking conversions if you are using our system Click API.
-To track conversions with the transaction ID from the click API response, you need to call the `ASP.trackConversion` function with the following parameters:
-If the `transaction_id` parameter is not provided, the SDK will try to look for the transaction ID from the domain cookies.
+### Block Rejected User when Rejected
+
+How it works:
+- If the response code is 200 and the status is not approved. The user will see a page with "Invalid Click".
+- If the response code is other than 200, nothing else happens.
+- If the SDK fails to execute for some reason such as: server unavailable, client network issue, or invalid usage of the SDK or API, the page will load normally.
 
 ```javascript
-ASP.trackConversion({
-  integrationID: '{integrationID}',
-  transaction_id: '{transactionID}', // Optional
+ASP.trackClick({
+    integrationID: 'REPLACE',
+    advertiser: 'REPLACE',
+    offer: 'REPLACE',
+    publisher: 'REPLACE'
 }).then(function(response) {
-  console.log(response); // {"status": 200, "data": {"status": "processing"}}
-})
+    console.log(response);
+    // Check if response was successful (status 200) but not approved
+    if (response.status === 200 && response.data.status !== "approved") {
+        // Clear the page content
+        document.body.innerHTML = '<p>Invalid click</p>';
+    }
+}).catch(function(error) {
+    // If there's an error, we don't do anything as per requirements
+    console.error("Error in trackClick:", error);
+    // Page loads normally if there's an error
+});
 ```
+
