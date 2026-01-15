@@ -1,5 +1,4 @@
-# 24metrics JavaScript SDK
-
+# [24metrics](https://24metrics.com) JavaScript SDK
 
 <!-- vim-markdown-toc GFM -->
 
