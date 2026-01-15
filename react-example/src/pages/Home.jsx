@@ -19,10 +19,13 @@ function Home() {
   useEffect(() => {
     // Track page load
     if (window.ASP) {
-      window.ASP.pageClick({
+      window.ASP.trackClick({
         integrationID: `${integrationID}`,
         offer: 'Home Page',
-        publisher: 'Crypto Trading Example App'
+        publisher: 'Crypto Trading Example App',
+        fields: 'fingerprint'
+      }).then(function (response) {
+        console.log(response);
       });
     }
   }, [])
@@ -30,10 +33,13 @@ function Home() {
   const handleCryptoClick = (crypto) => {
     // Track crypto card click
     if (window.ASP) {
-      window.ASP.pageClick({
+      window.ASP.trackClick({
         integrationID: `${integrationID}`,
-        offer: crypto.name,
+        offer: 'Home Page',
         publisher: 'Crypto Trading Example App',
+        fields: 'fingerprint'
+      }).then(function (response) {
+        console.log(response);
       });
     }
 
