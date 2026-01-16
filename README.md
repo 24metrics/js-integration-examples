@@ -6,14 +6,13 @@
 * [Installation](#installation)
 * [General Usage](#general-usage)
   * [Creating Clicks](#creating-clicks)
+    * [Reading the Advanced Function Response](#reading-the-advanced-function-response)
+    * [Example](#example)
   * [Creating Impressions](#creating-impressions)
   * [Creating Conversions](#creating-conversions)
   * [Creating Conversions using Transaction ID from Cookie](#creating-conversions-using-transaction-id-from-cookie)
-* [Examples](#examples)
+* [More Examples](#more-examples)
   * [Detecting Fraud in the Response](#detecting-fraud-in-the-response)
-  * [Creating Clicks](#creating-clicks-1)
-  * [Creating Impressions](#creating-impressions-1)
-  * [Creating Conversions](#creating-conversions-1)
   * [Block Rejected User when Rejected](#block-rejected-user-when-rejected)
 
 <!-- vim-markdown-toc -->
@@ -36,22 +35,70 @@ To install the Javascript SDK, you need to include the following script tag in t
 
 **Basic Function `ASP.pageClick({}`**- This is the one seen in the Integration Settings UI. This is used for general purposes. Use this function to automatically handle the redirection of *Approved Clicks Redirect URL* if approved or the *Redirect to Fallback URL* of the *Blocking Strategy for Fraud Clicks* if rejected.  See [React Example Webapp](./react-example).
 
-
 **Advanced Function `ASP.trackClick({})`** - Use this function to create a Click that may require more complex handling by using the response to handle approved/rejected event.
 
-**Reading the Advanced Function Response**
+#### Reading the Advanced Function Response
+You can add additional data to the response of `ASP.trackClick`. See example:
+- monitoring_mode
+- filter_group_id
+- ip
+- country
+- city
+- isp
+- asn
+- fingerprint
+- uuid
+- rejections
+- is_bot
+- proxy_type
+- redirect_url 
+    - If the response has a `redirect_url` field with value, you can use that to manually redirect the user.
+    - If the click is approved or monitoring mode is on in the Filter Group that is used, the value of the `redirect_url` will be the *Approved Clicks Redirect URL* if defined. If the click is rejected and monitoring mode is off, the value of the `redirect_url` will be the *Redirect to Fallback URL* if chosen as the *Block Strategy for Fraud Clicks*.
+    - If the click is rejected and monitoring mode is off and the *Blocking Strategy for Fraud Clicks* is Show Blank Page, the user will see a Blank page.
 
-- If the response has a `redirect_url` field with value, you can use that to manually redirect the user.
-- If the click is approved or monitoring mode is on in the Filter Group that is used, the value of the `redirect_url` will be the *Approved Clicks Redirect URL* if defined. If the click is rejected and monitoring mode is off, the value of the `redirect_url` will be the *Redirect to Fallback URL* if chosen as the *Block Strategy for Fraud Clicks*.
-- If the click is rejected and monitoring mode is off and the *Blocking Strategy for Fraud Clicks* is Show Blank Page, the user will see a Blank page.
+#### Example
+
+```javascript
+ASP.trackClick({
+  integrationID: '{integrationID}',
+  offer: '{offer}',
+  publisher: '{publisher}',
+  fields: 'fingerprint,proxy_type'
+}).then(function(response) {
+  console.log(response); // {"status": 200, "data": {"status": "approved", "transaction_id": "01HVMM5SAS879C0AQZ295VEVN9", "proxy_type": "VPN", "fingerprint": "7f4ec4ffd738a14810"}}
+});
+```
+
 
 ### Creating Impressions
 
 `ASP.trackImpression({})` - Use this function to create an Impression and use the response to handle approved/rejected event.
 
+```javascript
+ASP.trackImpression({
+  integrationID: '{integrationID}',
+  offer: '{offer}',
+  publisher: '{publisher}'
+}).then(function(response) {
+  console.log(response); // {"status": 200, "data": {"status": "approved", "transaction_id": "01HVMM5SAS879C0AQZ295VEVN9"}}
+});
+```
+
 ### Creating Conversions
 
 `ASP.trackConversion({})` - Use this function to create an Conversion and use the response to handle approved/rejected event.
+
+```javascript
+ASP.trackConversion({
+  integrationID: '{integrationID}',
+  offer: '{offer}',
+  publisher: '{publisher}',
+  revenue: '{revenue}',
+  payout: '{payout}'
+}).then(function(response) {
+  console.log(response); // {"status": 200, "data": {"status": "approved", "transaction_id": "01HVMM5SAS879C0AQZ295VEVN9"}}
+})
+```
 
 ### Creating Conversions using Transaction ID from Cookie
 
@@ -67,7 +114,8 @@ ASP.trackConversion({
   console.log(response); // {"status": 200, "data": {"status": "processing"}}
 })
 ```
-## Examples
+
+## More Examples
 
 You must pass these required parameters to each function:
 
@@ -121,51 +169,6 @@ ASP.trackClick({
   console.log(response); // {"status": 200, "data":{"status": "rejected", "reason": "VPN"}}
 });
 ```
-
-### Creating Clicks
-
-To track clicks, you need to call the `ASP.trackClick` function with the following parameters:
-
-```javascript
-ASP.trackClick({
-  integrationID: '{integrationID}',
-  offer: '{offer}',
-  publisher: '{publisher}'
-}).then(function(response) {
-  console.log(response); // {"status": 200, "data": {"status": "approved", "transaction_id": "01HVMM5SAS879C0AQZ295VEVN9"}}
-});
-```
-
-### Creating Impressions
-
-To track impressions, you need to call the `ASP.trackImpression` function with the following parameters:
-
-```javascript
-ASP.trackImpression({
-  integrationID: '{integrationID}',
-  offer: '{offer}',
-  publisher: '{publisher}'
-}).then(function(response) {
-  console.log(response); // {"status": 200, "data": {"status": "approved", "transaction_id": "01HVMM5SAS879C0AQZ295VEVN9"}}
-});
-```
-
-### Creating Conversions
-
-To track conversions, you need to call the `ASP.trackConversion` function with the following parameters:
-
-```javascript
-ASP.trackConversion({
-  integrationID: '{integrationID}',
-  offer: '{offer}',
-  publisher: '{publisher}',
-  revenue: '{revenue}',
-  payout: '{payout}'
-}).then(function(response) {
-  console.log(response); // {"status": 200, "data": {"status": "approved", "transaction_id": "01HVMM5SAS879C0AQZ295VEVN9"}}
-})
-```
-
 
 ### Block Rejected User when Rejected
 
