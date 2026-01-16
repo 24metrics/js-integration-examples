@@ -23,7 +23,7 @@ function Home() {
         integrationID: `${integrationID}`,
         offer: 'Home Page',
         publisher: 'Crypto Trading Example App',
-        fields: 'fingerprint'
+        fields: 'fingerprint,proxy_type,is_bot'
       }).then(function (response) {
         console.log(response);
       });
@@ -37,7 +37,7 @@ function Home() {
         integrationID: `${integrationID}`,
         offer: 'Home Page',
         publisher: 'Crypto Trading Example App',
-        fields: 'fingerprint'
+        fields: 'fingerprint,proxy_type,is_bot'
       }).then(function (response) {
         console.log(response);
       });

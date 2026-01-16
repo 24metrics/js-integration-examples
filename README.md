@@ -6,8 +6,9 @@
 * [Installation](#installation)
 * [General Usage](#general-usage)
   * [Creating Clicks](#creating-clicks)
-    * [Reading the Advanced Function Response](#reading-the-advanced-function-response)
-    * [Example](#example)
+    * [Reading `ASP.trackClick` Response](#reading-asptrackclick-response)
+    * [Example using `fields`](#example-using-fields)
+    * [Example using `filter_group`](#example-using-filter_group)
   * [Creating Impressions](#creating-impressions)
   * [Creating Conversions](#creating-conversions)
   * [Creating Conversions using Transaction ID from Cookie](#creating-conversions-using-transaction-id-from-cookie)
@@ -37,26 +38,29 @@ To install the Javascript SDK, you need to include the following script tag in t
 
 **Advanced Function `ASP.trackClick({})`** - Use this function to create a Click that may require more complex handling by using the response to handle approved/rejected event.
 
-#### Reading the Advanced Function Response
-You can add additional data to the response of `ASP.trackClick`. See example:
-- monitoring_mode
-- filter_group_id
-- ip
-- country
-- city
-- isp
-- asn
-- fingerprint
-- uuid
-- rejections
-- is_bot
-- proxy_type
-- redirect_url 
+#### Reading `ASP.trackClick` Response
+
+You can add additional data to the response of `ASP.trackClick`.
+
+The available fields that can be seen are:
+- `monitoring_mode` - To see the filter group monitoring mode status used for clicks.
+- `filter_group_id` - The filter group ID used. Useful if you want to know the filter group that matched.
+- `rejections` - The list of rejection reasons
+- `is_bot` - `1` if bot or `0` if not bot.
+- `proxy_type` - E.g. VPN, DataCenter, ResidentialProxy
+- `redirect_url` 
     - If the response has a `redirect_url` field with value, you can use that to manually redirect the user.
     - If the click is approved or monitoring mode is on in the Filter Group that is used, the value of the `redirect_url` will be the *Approved Clicks Redirect URL* if defined. If the click is rejected and monitoring mode is off, the value of the `redirect_url` will be the *Redirect to Fallback URL* if chosen as the *Block Strategy for Fraud Clicks*.
     - If the click is rejected and monitoring mode is off and the *Blocking Strategy for Fraud Clicks* is Show Blank Page, the user will see a Blank page.
+- `ip` - IP of the user.
+- `country` - Country of the IP.
+- `city` - City of the IP.
+- `isp` - ISP of the IP.
+- `asn` - ASN of the IP.
+- `fingerprint` - Generated fingerprint of the user.
+- `uuid` - Generated UUID of the user.
 
-#### Example
+#### Example using `fields`
 
 ```javascript
 ASP.trackClick({
@@ -65,7 +69,36 @@ ASP.trackClick({
   publisher: '{publisher}',
   fields: 'fingerprint,proxy_type'
 }).then(function(response) {
-  console.log(response); // {"status": 200, "data": {"status": "approved", "transaction_id": "01HVMM5SAS879C0AQZ295VEVN9", "proxy_type": "VPN", "fingerprint": "7f4ec4ffd738a14810"}}
+  console.log(response);
+});
+```
+
+Response object will have `proxy_type` and `fingerprint`:
+
+```json
+{
+  "status": 200,
+  "data": {
+    "status": "approved",
+    "transaction_id": "01HVMM5SAS879C0AQZ295VEVN9",
+    "proxy_type": "VPN",
+    "fingerprint": "7f4ec4ffd738a14810"
+  }
+}
+```
+
+#### Example using `filter_group`
+
+You can use a Filter Group on demand without having to depend on the Filter Group matching as long as you know the Filter Group ID. In this example the filter group ID is `wvv9f89xio`
+
+```javascript
+ASP.trackClick({
+  integrationID: '{integrationID}',
+  offer: '{offer}',
+  publisher: '{publisher}',
+  filter_group: 'wvv9f89xio'
+}).then(function(response) {
+  console.log(response);
 });
 ```
 
